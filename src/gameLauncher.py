@@ -46,7 +46,7 @@ class GameLauncher:
         
         
     def runGenerations(self):
-         '''
+        '''
         creates generations of neuronal network drven cars until NN_NumGenerations is 
         reached. For each generation runGame is called as long as one AICar is alive
         '''        
