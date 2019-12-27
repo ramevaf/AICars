@@ -24,7 +24,7 @@ class CarEntity(Entity):
         '''
         Constructor
         '''
-        self.s_xy = (448.46854946, 523.75220914)
+        self.s_xy = [448.46854946, 523.75220914]
         self.phi_p = 75.11528571428659        
         sprite = MySprite(custSprite)
         Entity.__init__(self, sprite, self.s_xy, isMovable = True)
@@ -118,14 +118,20 @@ class CarEntity(Entity):
         
         # when there is no road anymore then start counting the distance to colission
         dtc = 0
+
+        # prevent pixel acces out of range
+        new_s_xy[0] = np.clip(new_s_xy[0], 1, PAR.GameCanvas_Width-1)
+        new_s_xy[1] = np.clip(new_s_xy[1], 1, PAR.GameCanvas_Height-1)
+        
         # ... and count as long as road is white         
         while (GRASS_COLOR != gameCanvas.get_at(new_s_xy.astype(int))):
             new_s_xy = new_s_xy + d_s_xy
             # prevent pixel acces out of range
-            if ( (new_s_xy[0] > PAR.GameCanvas_Width) or (new_s_xy[1] > PAR.GameCanvas_Height) ):
-                break
+            new_s_xy[0] = np.clip(new_s_xy[0], 1, PAR.GameCanvas_Width-1)
+            new_s_xy[1] = np.clip(new_s_xy[1], 1, PAR.GameCanvas_Height-1)
+
             dtc+=1
-            
+
         return dtc
         
         

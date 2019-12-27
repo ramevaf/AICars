@@ -9,6 +9,7 @@ from mySprite import MySprite
 from carEntity import CarEntity
 from parameterHandler import ParameterHandler as PAR
 from aiCar import AICar
+from camera import Camera
 import evolution
 
 global endOfGame
@@ -17,7 +18,11 @@ class GameLauncher:
     '''
     classdocs
     '''
-    gameCanvas = pygame.display.set_mode((PAR.GameCanvas_Width,PAR.GameCanvas_Height))
+    # setup gameScreen which is the window shown
+    screen = pygame.display.set_mode((PAR.GameScreen_Width, PAR.GameScreen_Height), pygame.RESIZABLE)
+    # setup gameCanvas which represents the total size of the course
+    gameCanvas = pygame.Surface((PAR.GameCanvas_Width, PAR.GameCanvas_Height))
+
     clock = pygame.time.Clock()
     circuitSprite = MySprite('sprites/Racetrack.png')
     
@@ -37,12 +42,14 @@ class GameLauncher:
         # setup pygame window
         pygame.init()
         pygame.display.set_caption('AICars')
+        # init game camera
+        self.camera = Camera([PAR.GameCanvas_Width, PAR.GameCanvas_Height], [PAR.GameScreen_Width, PAR.GameScreen_Height])
         # init players car
         self.playerCar = CarEntity('Sprites/PlayerCar.png')
         # fill canvas with solid white
         self.gameCanvas.fill(PAR.GameCanvas_Background)
-        # draw circuit on canvas
-        self.circuitSprite.draw(self.gameCanvas, (PAR.GameCanvas_Width/2, PAR.GameCanvas_Height/2), 0)
+
+        self.cars = []
         
         
     def runGenerations(self):
@@ -94,6 +101,7 @@ class GameLauncher:
         dt = self.clock.get_time()/1000
         # process user input
         self.runEventHandler()
+
         # fill canvas with solid white
         self.gameCanvas.fill(PAR.GameCanvas_Background)
         # draw circuit on canvas
@@ -107,7 +115,6 @@ class GameLauncher:
                     
                 if (pygame.sprite.collide_mask(i.getSprite(), self.circuitSprite)):
                     i.kill()
-                    i.draw(self.gameCanvas)
         
         self.clock.tick(30)
             
@@ -115,8 +122,17 @@ class GameLauncher:
         self.playerCar.move(dt)
         # draw car on canvas
         self.playerCar.draw(self.gameCanvas)
+
+        # update camera position based on players car
+        self.camera.update(self.playerCar.s_xy)
+
+        # scroll gamecanvas to apply camera offset
+        self.gameCanvas.scroll(self.camera.getScreenOffsetX(), self.camera.getScreenOffsetY())
+        # display gamecanvas on screen
+        self.screen.blit(self.gameCanvas, (0,0))
+        
         # update canvas and show on screen
-        pygame.display.update()         
+        pygame.display.update()
         
     def runEventHandler(self):
         ''' 

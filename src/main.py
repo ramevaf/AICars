@@ -6,5 +6,7 @@ Created on 21.05.2019
 from gameLauncher import GameLauncher
 
 if __name__ == '__main__':   
-	GL = GameLauncher()		
-	GL.runGenerations()
+    GL = GameLauncher()
+    GL.runGenerations()
+    # while(True):
+    #     GL.runGame()

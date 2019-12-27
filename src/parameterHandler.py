@@ -7,7 +7,10 @@ class ParameterHandler:
     '''
     classdocs
     '''
-    
+    # gameScree
+    GameScreen_Width = 600      # pixel
+    GameScreen_Height  = 400    # pixel
+
     # gamecanvas
     GameCanvas_Width = 800      # pixel
     GameCanvas_Height  = 600    # pixel
