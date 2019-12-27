@@ -11,6 +11,7 @@ from parameterHandler import ParameterHandler as PAR
 from aiCar import AICar
 from camera import Camera
 import evolution
+import numpy as np
 
 global endOfGame
 
@@ -22,8 +23,9 @@ class GameLauncher:
     screen = pygame.display.set_mode((PAR.GameScreen_Width, PAR.GameScreen_Height), pygame.RESIZABLE)
     # setup gameCanvas which represents the total size of the course
     gameCanvas = pygame.Surface((PAR.GameCanvas_Width, PAR.GameCanvas_Height))
-
+    # setup clock
     clock = pygame.time.Clock()
+
     circuitSprite = MySprite('sprites/Racetrack.png')
     
     leftPressed = False
@@ -42,6 +44,9 @@ class GameLauncher:
         # setup pygame window
         pygame.init()
         pygame.display.set_caption('AICars')
+         # init pygame.font used for displaying text onto the gamescreen
+        pygame.font.init()
+        self.myfont = pygame.font.SysFont('Arial', 18)
         # init game camera
         self.camera = Camera([PAR.GameCanvas_Width, PAR.GameCanvas_Height], [PAR.GameScreen_Width, PAR.GameScreen_Height])
         # init players car
@@ -130,7 +135,10 @@ class GameLauncher:
         self.gameCanvas.scroll(self.camera.getScreenOffsetX(), self.camera.getScreenOffsetY())
         # display gamecanvas on screen
         self.screen.blit(self.gameCanvas, (0,0))
-        
+        # create textSurface for displaying frame rate
+        textSurface = self.myfont.render(str(self.getFrameRate()), False, (0, 0, 0))
+        self.screen.blit(textSurface,(10,10))
+
         # update canvas and show on screen
         pygame.display.update()
         
@@ -182,3 +190,7 @@ class GameLauncher:
                     self.start = True    
         return
     
+    def getFrameRate(self):
+        dt = self.clock.get_time()/1000
+        frames = int(np.divide(1,dt))
+        return frames
