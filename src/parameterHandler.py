@@ -8,14 +8,16 @@ class ParameterHandler:
     classdocs
     '''
     # gameScree
-    GameScreen_Width = 600      # pixel
-    GameScreen_Height  = 400    # pixel
+    GameScreen_Width = 800      # pixel
+    GameScreen_Height  = 600    # pixel
 
     # gamecanvas
-    GameCanvas_Width = 800      # pixel
-    GameCanvas_Height  = 600    # pixel
-    GameCanvas_Background = (255, 255, 255)
+    GameCanvas_Width = 2000      # pixel
+    GameCanvas_Height  = 1500    # pixel
+    GameCanvas_Background = (200, 200, 200)
     GameCanvas_CircuitGrass = (1,157,1)
+    GameCanvas_StartingPoint = [1650.0,1350.0]
+    GameCanvas_StartingAngle = 95.0
     
     # rar entity
     Car_SteeringAccel =     1200  # rad/s�
@@ -24,6 +26,7 @@ class ParameterHandler:
     Car_BrakeAccel =        -500  # pixel/s�
     Car_AirRestAccel =      -50   # pixel/s�
     Car_MaxSpeed =          250   # pixel/s
+    Car_OfftrackSpeed =     150   # pixel/s
     Car_DTCStepSize = 7
     
     AICar_DTCAngles = [-90,-45,0,45,90]

@@ -23,8 +23,8 @@ class CarEntity(Entity):
         '''
         Constructor
         '''
-        self.s_xy = [448.46854946, 523.75220914]
-        self.phi_p = 75.11528571428659        
+        self.s_xy = PAR.GameCanvas_StartingPoint
+        self.phi_p = PAR.GameCanvas_StartingAngle       
         sprite = MySprite(custSprite)
         Entity.__init__(self, sprite, self.s_xy, isMovable = True)
         

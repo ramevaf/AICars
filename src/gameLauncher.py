@@ -26,7 +26,7 @@ class GameLauncher:
     # setup clock
     clock = pygame.time.Clock()
 
-    circuitSprite = MySprite('sprites/Racetrack.png')
+    circuitSprite = MySprite('sprites/Circuit.png')
     
     leftPressed = False
     rightPressed = False
@@ -106,8 +106,7 @@ class GameLauncher:
         dt = self.clock.get_time()/1000
         # process user input
         self.runEventHandler()
-
-        # fill canvas with solid white
+        # fill canvas with racetrack color
         self.gameCanvas.fill(PAR.GameCanvas_Background)
         # draw circuit on canvas
         self.circuitSprite.draw(self.gameCanvas, (PAR.GameCanvas_Width/2, PAR.GameCanvas_Height/2), 0)
@@ -120,17 +119,17 @@ class GameLauncher:
                     
                 if (pygame.sprite.collide_mask(i.getSprite(), self.circuitSprite)):
                     i.kill()
-        
+        # limit framerate to ~30 fps
         self.clock.tick(30)
-            
         # calculate new position of players car entity
         self.playerCar.move(dt)
+        # slow down player car if off track
+        if (pygame.sprite.collide_mask(self.playerCar.getSprite(), self.circuitSprite)):
+            self.playerCar.v_p = PAR.Car_OfftrackSpeed
         # draw car on canvas
         self.playerCar.draw(self.gameCanvas)
-
-        # update camera position based on players car
+        # update camera position so it follows players car
         self.camera.update(self.playerCar.s_xy)
-
         # scroll gamecanvas to apply camera offset
         self.gameCanvas.scroll(self.camera.getScreenOffsetX(), self.camera.getScreenOffsetY())
         # display gamecanvas on screen
