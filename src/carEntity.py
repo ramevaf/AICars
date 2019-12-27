@@ -4,7 +4,6 @@ Created on 28.05.2019
 @author: D.Ramonat
 '''
 import numpy as np
-
 from entity import Entity
 from mySprite import MySprite
 from parameterHandler import ParameterHandler as PAR
@@ -65,7 +64,6 @@ class CarEntity(Entity):
         '''
         move function is adapted to add a steering acceleration
         '''
-        
         # process steering
         if (self.isSteering == False):
             # stop steering at 0 
@@ -97,24 +95,20 @@ class CarEntity(Entity):
             
         self.v_p = np.clip(self.v_p, 0, PAR.Car_MaxSpeed)
         
-    def getDTC(self, gameCanvas, phi_p):
+    def getDTC(self, phi_p, circuitSprite):
         '''
         calculates the distance to collision starting at the current position and pointing
         towards the phi_p value
         
-        need to find a way to repalce the magic numbers for the color codes for street/grass
+        need to find a way to replace the magic numbers for the color codes for street/grass
         '''
         # calculate step size for distance to collision calculation in xy coordinates
         d_s_xy = (-np.sin(np.deg2rad(phi_p)), -np.cos(np.deg2rad(phi_p)))
+        # accelerate step size
+        d_s_xy += np.multiply(d_s_xy, PAR.Car_DTCStepSize)
         new_s_xy = self.s_xy
         # calculate new step position, skip the first pixel to avoid that the car sprite itself will be detected
         
-#         try:
-#             while (     (STREET_COLOR != gameCanvas.get_at(new_s_xy.astype(int))) 
-#                     and (GRASS_COLOR != gameCanvas.get_at(new_s_xy.astype(int)))):
-#                 new_s_xy = new_s_xy + d_s_xy
-#         except:
-#             return 0
         
         # when there is no road anymore then start counting the distance to colission
         dtc = 0
@@ -123,15 +117,15 @@ class CarEntity(Entity):
         new_s_xy[0] = np.clip(new_s_xy[0], 1, PAR.GameCanvas_Width-1)
         new_s_xy[1] = np.clip(new_s_xy[1], 1, PAR.GameCanvas_Height-1)
         
-        # ... and count as long as road is white         
-        while (GRASS_COLOR != gameCanvas.get_at(new_s_xy.astype(int))):
+        # ... and count as long as road mask is not set         
+        while (True != circuitSprite.mask.get_at(new_s_xy.astype(int))):
             new_s_xy = new_s_xy + d_s_xy
             # prevent pixel acces out of range
             new_s_xy[0] = np.clip(new_s_xy[0], 1, PAR.GameCanvas_Width-1)
             new_s_xy[1] = np.clip(new_s_xy[1], 1, PAR.GameCanvas_Height-1)
 
             dtc+=1
-
+        # print("dtc: " + str(dtc))
         return dtc
         
         

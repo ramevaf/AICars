@@ -13,7 +13,7 @@ from parameterHandler import ParameterHandler as PAR
 
 class AICar(CarEntity):
     '''
-    a carEntity represents a car in this game :)
+    a AIcar represents a AI controlled car in this game :)
     '''
     alive = True
     distanceTraveled = 0.0
@@ -26,7 +26,7 @@ class AICar(CarEntity):
         self.net = NeuronalNetwork(netSize)
         self.distanceTraveled = 0
         
-    def run(self, gameCanvas):
+    def run(self, gameCanvas, circuitSprite):
         '''
         makes the car driving with control of the neuronal network input of the 
         network are 5 distances measured towards the border of the drivable 
@@ -37,7 +37,7 @@ class AICar(CarEntity):
             # create a vector with all DTCs
             x = np.array([])
             for DTCAngle in PAR.AICar_DTCAngles:
-                x = np.append(x, self.getDTC(gameCanvas, self.phi_p+DTCAngle))
+                x = np.append(x, self.getDTC(self.phi_p+DTCAngle, circuitSprite))
 
             # calculate feed forward path in the NN and return the output
             # since the network has two output neuron the return value consists

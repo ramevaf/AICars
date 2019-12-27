@@ -24,12 +24,13 @@ class ParameterHandler:
     Car_BrakeAccel =        -500  # pixel/s�
     Car_AirRestAccel =      -50   # pixel/s�
     Car_MaxSpeed =          250   # pixel/s
+    Car_DTCStepSize = 7
     
     AICar_DTCAngles = [-90,-45,0,45,90]
     AICar_SteeringThreshold = 0.1
     
     NN_NumGenerations = 100
-    NN_NumPopulationPerGen = 20
+    NN_NumPopulationPerGen = 10
     NN_NetSize = [5,20,10,2]
     NN_mutationRate = 0.2
     NN_crossoverRate = 0.35

@@ -31,7 +31,7 @@ def evolveGeneration(generation):
         newAICar.net = i.net
         nextGen.append(newAICar)
 #         print ("  par" + str(i.net))
-    print ("  kept " + str(len(nextGen)) + "entities as parents")
+    # print ("  kept " + str(len(nextGen)) + " entities as parents")
     
     
     # breed new childs as long as current population is less than the population size
@@ -49,9 +49,6 @@ def evolveGeneration(generation):
     for i in nextGen:
         i.alive = True 
         
-    
-#     for i in nextGen:
-#         print ("  nex" + str(i.net))     
     return nextGen
 
 def crossover(father, mother):
@@ -93,8 +90,6 @@ def mutation(child):
     @returns = new child based on father/mother genetic information
     '''
 
-#     print("child before mutation: " + str(child.net))
-
     # mutate bias
     for _ in range(child.net.numOfBiases):
         # get some random points
@@ -111,7 +106,6 @@ def mutation(child):
         if random.uniform(0,1) < PAR.NN_mutationRate:
             child.net.weights[layer][point[0], point[1]] += random.uniform(-0.5, 0.5)
     
-#     print("child after mutation: " + str(child.net))
     return child
 
 def getRandomPoint(net, type):
@@ -121,7 +115,6 @@ def getRandomPoint(net, type):
     @returns tuple (layer_index, point_index)
         note: if type is set to 'weight', point_index will return (row_index, col_index)
     '''
-    
     layer_index, point_index = random.randint(0, net.numOfLayers-2), 0
     if type == 'weight':
         row = random.randint(0,net.weights[layer_index].shape[0]-1)

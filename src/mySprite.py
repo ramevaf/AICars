@@ -17,7 +17,7 @@ class MySprite(pygame.sprite.Sprite):
         Constructor
         '''
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
-        self.image = pygame.image.load(path2Image)#.convert_alpha()
+        self.image = pygame.image.load(path2Image).convert_alpha()
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         
@@ -71,8 +71,3 @@ class MySprite(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(rotImg) 
         
         gameCanvas.blit(rotImg, corr_s_xy)
-        # pygame.draw.circle(gameCanvas, (0,0,0), np.array(s_xy).astype(int), 2)
-               
-        
-        
-    

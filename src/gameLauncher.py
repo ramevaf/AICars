@@ -20,7 +20,7 @@ class GameLauncher:
     classdocs
     '''
     # setup gameScreen which is the window shown
-    screen = pygame.display.set_mode((PAR.GameScreen_Width, PAR.GameScreen_Height), pygame.RESIZABLE)
+    screen = pygame.display.set_mode((PAR.GameScreen_Width, PAR.GameScreen_Height))
     # setup gameCanvas which represents the total size of the course
     gameCanvas = pygame.Surface((PAR.GameCanvas_Width, PAR.GameCanvas_Height))
     # setup clock
@@ -90,7 +90,7 @@ class GameLauncher:
                 if (self.nextgen == True):
                     anyoneAlive = [False]
                 
-            print("all of entities dead! evolving...")
+            # print("all of entities dead! evolving...")
             
             self.cars = evolution.evolveGeneration(self.cars)                    
             self.nextgen == False
@@ -114,7 +114,7 @@ class GameLauncher:
         # calculate car instances
         for i in self.cars:
             if (i.alive == True):
-                i.run(self.gameCanvas)
+                i.run(self.gameCanvas, self.circuitSprite)
                 i.move(dt)
                 i.draw(self.gameCanvas)
                     
@@ -191,6 +191,11 @@ class GameLauncher:
         return
     
     def getFrameRate(self):
+        '''
+        returns the frame rate as int
+
+        @return: frames/second
+        '''
         dt = self.clock.get_time()/1000
         frames = int(np.divide(1,dt))
         return frames
