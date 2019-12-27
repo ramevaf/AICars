@@ -125,7 +125,9 @@ class GameLauncher:
         self.playerCar.move(dt)
         # slow down player car if off track
         if (pygame.sprite.collide_mask(self.playerCar.getSprite(), self.circuitSprite)):
-            self.playerCar.v_p = PAR.Car_OfftrackSpeed
+            self.playerCar.maxSpeed = PAR.Car_OfftrackSpeed
+        else:
+            self.playerCar.maxSpeed = PAR.Car_MaxSpeed
         # draw car on canvas
         self.playerCar.draw(self.gameCanvas)
         # update camera position so it follows players car

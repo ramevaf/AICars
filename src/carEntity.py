@@ -18,6 +18,7 @@ class CarEntity(Entity):
     '''
     isSteering = 0
     steeringAccel = 0
+    maxSpeed = PAR.Car_MaxSpeed
 
     def __init__(self, custSprite = 'sprites/car.png', isMovable = True):
         '''
@@ -82,7 +83,7 @@ class CarEntity(Entity):
             self.d_phi_p = np.clip(self.d_phi_p, -PAR.Car_MaxSteeringSpeed, PAR.Car_MaxSteeringSpeed)
         
         # calculte speed dependent steering
-        steeringFac = self.v_p/(PAR.Car_MaxSpeed/3) # maximum steering reacted at 1/3 of maxspeed    
+        steeringFac = self.v_p/(PAR.Car_MaxSpeed/3) # maximum steering at 1/3 of maxspeed
         steeringFac = np.clip(steeringFac, 0, 1)
         
         self.d_phi_p = self.d_phi_p*steeringFac 
@@ -93,7 +94,7 @@ class CarEntity(Entity):
             self.v_p = 0
             self.a_p = 0
             
-        self.v_p = np.clip(self.v_p, 0, PAR.Car_MaxSpeed)
+        self.v_p = np.clip(self.v_p, 0, self.maxSpeed)
         
     def getDTC(self, phi_p, circuitSprite):
         '''
