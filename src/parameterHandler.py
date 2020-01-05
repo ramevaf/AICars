@@ -32,7 +32,7 @@ class ParameterHandler:
     
     AICar_DTCAngles = [-90,-45,0,45,90]
     AICar_SteeringThreshold = 0.1
-    AICar_Controlmode = '5DirSteer' # ['Simple2DirSteer', 'Simple3DirSteer', '5DirSteer']
+    AICar_Controlmode = 'Simple3DirSteer' # ['Simple2DirSteer', 'Simple3DirSteer', '5DirSteer']
     
     NN_NumGenerations = 100
     NN_NumPopulationPerGen = 20
