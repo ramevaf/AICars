@@ -1,4 +1,7 @@
 '''
+This module contains the functions used for the evólution of the gernerations
+of AICars 
+
 Created on 29.09.2019
 
 @author: D.Ramonat
@@ -10,6 +13,13 @@ from parameterHandler import ParameterHandler as PAR
 
         
 def evolveGeneration(generation):
+    '''
+    uses the current generation of AICars and creates a newer
+    and hopefully better generation.
+
+    :param generation: list of AICars from the former generation
+    :returns: list of AICar for usage as new generation
+    '''
     # sort generation list by traveled distance descending 
     generation.sort(key=lambda x: x.distanceTraveled, reverse=True)
     #parentList = sorted(generation, key=lambda x: x.distanceTraveled, reverse=True)
@@ -30,7 +40,6 @@ def evolveGeneration(generation):
         newAICar = AICar(PAR.NN_NetSize)
         newAICar.net = i.net
         nextGen.append(newAICar)
-#         print ("  par" + str(i.net))
     # print ("  kept " + str(len(nextGen)) + " entities as parents")
     
     
@@ -53,9 +62,11 @@ def evolveGeneration(generation):
 
 def crossover(father, mother):
     '''
-    @father = neural-net object representing father
-    @mother = neural-net object representing mother
-    @returns = new child based on father/mother genetic information
+    breeds a new AICar from two given instances
+
+    :param father: neural-net object representing father
+    :param mother: neural-net object representing mother
+    :returns: new AICar object based on father/mother genetic information
     '''
  
     # make a copy of father 'genetic' weights & biases information
@@ -87,7 +98,10 @@ def crossover(father, mother):
 
 def mutation(child):
     '''
-    @returns = new child based on father/mother genetic information
+    adds some mutations to a given AICar instance
+
+    :param child: AICar which shall have mutations
+    :returns: AICar object
     '''
 
     # mutate bias
@@ -109,10 +123,12 @@ def mutation(child):
     return child
 
 def getRandomPoint(net, type):
- 
     '''
-    @type = either 'weight' or 'bias'
-    @returns tuple (layer_index, point_index)
+    returns a random weigth or bias which is needed for breeding and mutation
+
+    :param net: the neuronal net object used
+    :param type: either 'weight' or 'bias'
+    :returns: tuple (layer_index, point_index)
         note: if type is set to 'weight', point_index will return (row_index, col_index)
     '''
     layer_index, point_index = random.randint(0, net.numOfLayers-2), 0

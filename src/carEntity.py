@@ -1,4 +1,7 @@
 '''
+This module contains the CarEntity class which adds some car specific
+commands to the Entity class
+
 Created on 28.05.2019
 
 @author: D.Ramonat
@@ -7,10 +10,6 @@ import numpy as np
 from entity import Entity
 from mySprite import MySprite
 from parameterHandler import ParameterHandler as PAR
-
-# (255,255,255,255) is the code for the white road and (1,157,1,255) for the grass
-STREET_COLOR = PAR.GameCanvas_Background
-GRASS_COLOR  = PAR.GameCanvas_CircuitGrass
 
 class CarEntity(Entity):
     '''
@@ -23,6 +22,9 @@ class CarEntity(Entity):
     def __init__(self, custSprite = 'sprites/car.png', isMovable = True):
         '''
         Constructor
+
+        :param custSprite: a given MySprite object to be used to draw this object
+        :param isMovable: boolean value allows to generate non movable cars because why not?
         '''
         self.s_xy = PAR.GameCanvas_StartingPoint
         self.phi_p = PAR.GameCanvas_StartingAngle       
@@ -30,26 +32,48 @@ class CarEntity(Entity):
         Entity.__init__(self, sprite, self.s_xy, isMovable = True)
         
     def steerLeft(self, steeraccel = PAR.Car_SteeringAccel):
+        '''
+        makes the car steer left
+
+        :param steeraccel: steering acclereration given in degrees/s^2
+        '''
         self.steeringAccel = steeraccel
         self.isSteering = True      
         
     def steerRight(self, steeraccel = PAR.Car_SteeringAccel):
+        '''
+        makes the car steer right
+
+        :param steeraccel: steering acclereration given in degrees/s^2
+        '''
         self.steeringAccel = -steeraccel     
         self.isSteering = True      
 
     def pushThrottle(self):
+        '''
+        makes the car accelerate
+        '''
         self.isBraking = False
         self.a_p = PAR.Car_ThrottleAccel
     
     def pushBrake(self):
+        '''
+        brakes the car
+        '''
         self.isBraking = True
         self.a_p = PAR.Car_BrakeAccel
         
     def roll(self):
+        '''
+        let the car roll with drag only
+        '''
         self.isBraking = False
         self.a_p = PAR.Car_AirRestAccel
         
     def stopSteering(self):
+        '''
+        makes the car steer straight again
+        '''
         if (self.d_phi_p > 0):
             self.steeringAccel = -PAR.Car_SteeringAccel
         else:
@@ -57,6 +81,9 @@ class CarEntity(Entity):
         self.isSteering = False
         
     def stop(self):
+        '''
+        sets velocity and steering to zero
+        '''
         self.steeringAccel = 0
         self.v_p = 0
         self.a_p = 0
@@ -64,6 +91,8 @@ class CarEntity(Entity):
     def move(self, dt):
         '''
         move function is adapted to add a steering acceleration
+
+        :param dt: delta time between each call in ms
         '''
         # process steering
         if (self.isSteering == False):
@@ -100,8 +129,12 @@ class CarEntity(Entity):
         '''
         calculates the distance to collision starting at the current position and pointing
         towards the phi_p value
-        
-        need to find a way to replace the magic numbers for the color codes for street/grass
+
+        :param phi_p: direction in which the collision shall be calculated given degrees 
+                note: if the distance to collision in driving direction shall be calculated
+                      phi_p must be given as absolute value  the acutal phi_p) and not to zero
+        :param circuitSprite: MySprite object containing the borders of the driving course
+        :returns: int value of distance to first collision in pixel
         '''
         # calculate step size for distance to collision calculation in xy coordinates
         d_s_xy = (-np.sin(np.deg2rad(phi_p)), -np.cos(np.deg2rad(phi_p)))

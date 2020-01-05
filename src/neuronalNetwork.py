@@ -1,4 +1,6 @@
 '''
+This module contains the Neuronaletwork class and its methods.
+
 Created on 29.09.2019
 
 @author: D.Ramonat
@@ -9,11 +11,15 @@ class NeuronalNetwork:
 
     def __init__(self, structure):
         
-        '''The list ``structure`` contains the number of neurons in the
-        respective layers of the network.  For example, if the list
-        was [2, 3, 1] then it would be a three-layer network, with the
-        first layer containing 2 neurons, the second layer 3 neurons,
-        and the third layer 1 neuron.'''
+        '''
+        Constructor
+
+        :param structure: contains the number of neurons in the respective 
+            layers of the network. For example, if the list was [2, 3, 1] 
+            then it would be a three-layer network, with the first layer 
+            containing 2 neurons, the second layer 3 neurons, and the third 
+            layer 1 neuron.
+        '''
         
         self.numOfLayers = len(structure)
         self.structure = structure
@@ -39,13 +45,23 @@ class NeuronalNetwork:
         self.numOfWeights = sum([self.weights[i].size for i in range(numOfHiddenLayers)])
                 
     def feedforward(self, input):
-        '''Return the output of the network for a given input.'''
+        '''
+        Returns the output of the network for a given input.
+        
+        :param input: input values for the first layer of the net
+        :returns: numpy array with output values of the net
+        '''
         for biases, weights in zip(self.biases, self.weights):
             # use result as new input for next cycle
             input = self.sigmoid(np.dot(weights,input)+biases)
         return input
 
     def sigmoid(self, x):
-        '''The sigmoid function used as activation function for the neurons'''
+        '''
+        The sigmoid function used as activation function for the neurons
+        
+        :param x: input
+        :returns: output of the sigmoid function
+        '''
         z = 1/(1 + np.exp(-x)) 
         return z

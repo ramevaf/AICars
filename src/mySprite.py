@@ -1,4 +1,6 @@
 '''
+This module contains the MySprite class and its methods
+
 Created on 21.05.2019
 
 @author: D.Ramonat
@@ -15,6 +17,8 @@ class MySprite(pygame.sprite.Sprite):
     def __init__(self, path2Image):
         '''
         Constructor
+
+        :param path2Image: path to the image file given as string
         '''
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
         self.image = pygame.image.load(path2Image).convert_alpha()
@@ -24,6 +28,8 @@ class MySprite(pygame.sprite.Sprite):
     def getWidth(self):
         '''
         returns sprite width in pixel
+
+        :returns: int in pixel
         '''
         size = self.image.get_size()
         return size[0]
@@ -31,6 +37,8 @@ class MySprite(pygame.sprite.Sprite):
     def getHeight(self):
         '''
         returns sprite height in pixel
+
+        :returns: int in pixel
         '''
         size = self.image.get_size()
         return size[1]
@@ -38,18 +46,23 @@ class MySprite(pygame.sprite.Sprite):
     def getImage(self):
         '''
         returns image
+
+        :returns: pygame.image object
         '''
         return self.image
     
     def getRotatedImage(self, phi):
         '''
-        rotates image by a given angle phi (in rad) and returns rotated image
+        rotates image by a given angle phi (in degrees) and returns rotated image
+        
+        :param phi: angle of rotation in degrees
+        :returns: pygame.image object
         '''
         return (pygame.transform.rotate(self.image, phi))
     
 #     def scaleImage(self, factor):
 #         '''
-#         scales image by a given factor and returns scaled iage
+#         scales image by a given factor and returns scaled image
 #         '''
 #         newSize = ( np.int(self.getWidth()*factor), np.int(self.getHeight()*factor) )
 #         return (pygame.transform.scale(self.__image, (100,100)))
@@ -57,7 +70,11 @@ class MySprite(pygame.sprite.Sprite):
         
     def draw(self, gameCanvas, s_xy, phi = 0):
         '''
-        draws the sprite on the gameCanvas at position s_xy and at angle phi
+        draws the sprite on the gameCanvas at position s_xy and with angle phi
+
+        :param gameCanvas: gameCanvas to draw on
+        :param s_xy: position in regards to the gameCanvas where to draw the image
+        :param phi: angle of rotation in degrees
         '''
         # rotate image
         rotImg = self.getRotatedImage(phi)

@@ -1,4 +1,6 @@
 '''
+This module contains the Entity class and its methods
+
 Created on 21.05.2019
 
 @author: D.Ramonat
@@ -18,7 +20,7 @@ class Entity:
     s_xy = (0,0)   # pixels
     # variables is polar coordinates
     d_phi_p = 0      # radial speed
-    phi_p = 0        # rad
+    phi_p = 0        # degrees
     a_p   = 0        # pixels/s�
     v_p   = 0        # pixels/s
     
@@ -27,6 +29,10 @@ class Entity:
     def __init__(self, sprite, s_xy, isMovable = True):
         '''
         Constructor
+
+        :param sprite: the sprite which shall be assigned to this entity
+        :param s_xy: inital position of the entity given as list or tupel
+        :param isMovable: boolean value defining whether the entity is movable
         '''
         self.s_xy = np.asarray(s_xy)
         self.sprite = sprite
@@ -35,8 +41,10 @@ class Entity:
     
     def move(self, dt): 
         '''
-        updates position variables depending on the entities acceleration and velocity. This
+        updates position depending on the entities acceleration and velocity. This
         function should be called once every game cycle
+
+        :param dt: delta time between each call in ms
         '''
         if(self.isMovable):
             # update angle
@@ -59,74 +67,66 @@ class Entity:
     
     def setdPhi_p(self, d_phi_p):
         '''
-        sets the entities yaw rate at rad/s
+        sets the entities yaw rate
+
+        :param  d_phi_p: yaw rate given in degrees/s
         '''
         self.d_phi_p = d_phi_p
         
     def setPhi_p(self, phi_p):
         '''
-        sets the entities yaw angle in rad
+        sets the entities yaw angle
+
+        :param  phi_p: yaw angle in degrees
         '''
         self.phi_p = phi_p
     
     def setAccel_p(self, a_p):
+        '''
+        sets the entities acceleration in polar coordinates
+
+        :param  a_p: acceleration in polar coordinates give in pixel/s²
+        '''
         self.a_p = a_p
 
     def setAccel_xy(self, a_xy):
         '''
-        sets the entities acceleration in x,y components
+        sets the entities acceleration in xy coordinates
+
+        :param  a_xy: acceleration give as numpy array in xy coordinates
+                      give in pixel/s²
         '''
         self.a_xy = a_xy
 
-    def setAccel_x(self, a_x):
-        '''
-        sets the entities acceleration x component
-        '''
-        self.a_xy[0] = a_x
-
-    def setAccel_y(self, a_y):
-        '''
-        sets the entities acceleration y component
-        '''
-        self.a_xy[1] = a_y
-        
     def setVelocity_p(self, v_p):
         '''
         sets the entities velocity in moving direction (polar)
+
+        :param v_p: velocity in pixel/s
         '''
         self.v_p = v_p
         
     def setVelocity_xy(self, v_xy):
         '''
-        sets the entities velocity in x,y components
+        sets the entities velocity in xy coordintates
+
+        :param v_p: velocity in pixel/s
         '''
         self.v_xy = v_xy
         
-    def setVelocity_x(self, v_x):
-        '''
-        sets the entities velocity x component
-        '''
-        self.v_xy[0] = v_x
-
-    def setVelocity_y(self, v_y):
-        '''
-        sets the entities velocity y component
-        '''
-        self.v_xy[1] = v_y
-        
     def draw(self, gameCanvas):
         '''
-        draws the entities mySprite at the game canvas. This method should be called
-        once every game cycle
-        '''
-        
-        #self.sprite.rect.draw()
+        draws the entities Sprite at the Gamecanvas
 
+        :param gameCanvas: GameCanvas object to draw on
+        '''
         self.sprite.draw(gameCanvas, self.s_xy, self.phi_p)
         
     def getSprite(self):
         '''
         returns the sprite assigned to this entity
+
+        :returns: MySprite object
         '''
         return self.sprite
     

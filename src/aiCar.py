@@ -1,4 +1,6 @@
 '''
+This module contains the AICar class and its methods
+
 Created on 28.05.2019
 
 @author: D.Ramonat
@@ -21,6 +23,8 @@ class AICar(CarEntity):
     def __init__(self, netSize):
         '''
         Constructor, initializes the neuronal network
+
+        :param netSize: list of int defining the structure of the neuronal net
         '''
         CarEntity.__init__(self)
         self.net = NeuronalNetwork(netSize)
@@ -32,6 +36,9 @@ class AICar(CarEntity):
         network are 5 distances measured towards the border of the drivable 
         corridor (DTC-distance to collision) in certain angles (default 90, 45,
         0 (driving direction), -45 and -90 degrees)
+
+        :param gameCanvas: the GameCanvas object where the AICar is represented
+        :param circuitSprite: the MySprite object defining the borders of the track
         '''
         if (self.alive == True):
             # create a vector with all DTCs
@@ -57,6 +64,9 @@ class AICar(CarEntity):
         
         in a first atempt the NN will only control the steering and the
         thotle will be pushed all the time
+
+        :param first: fist input command
+        :param second: second input command
         '''
        
         # Option 1: 

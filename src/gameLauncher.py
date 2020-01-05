@@ -1,4 +1,6 @@
 '''
+This module contains the GameLauncher class and its methods
+
 Created on 21.05.2019
 
 @author: D.Ramonat
@@ -17,7 +19,7 @@ global endOfGame
 
 class GameLauncher:
     '''
-    classdocs
+    the GameLauncher handles the gameplay logic for this game and the drawing o screen
     '''
     # setup gameScreen which is the window shown
     screen = pygame.display.set_mode((PAR.GameScreen_Width, PAR.GameScreen_Height))
@@ -100,7 +102,7 @@ class GameLauncher:
 
     def runGame(self):
         ''' 
-        calculates the objects of the game for one cycle
+        calculates the objects of the game for one cycle and handles drawing on screen
         '''
         # get difference time in s
         dt = self.clock.get_time()/1000
@@ -193,9 +195,9 @@ class GameLauncher:
     
     def getFrameRate(self):
         '''
-        returns the frame rate as int
+        returns the frame rate
 
-        @return: frames/second
+        :returns: int in frames/second
         '''
         dt = self.clock.get_time()/1000
         frames = int(np.divide(1,dt))
