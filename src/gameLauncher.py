@@ -118,7 +118,7 @@ class GameLauncher:
                 i.run(self.gameCanvas, self.circuitSprite)
                 i.move(dt)
                 i.draw(self.gameCanvas)
-                    
+
                 if (pygame.sprite.collide_mask(i.getSprite(), self.circuitSprite)):
                     i.kill()
         # limit framerate to ~30 fps
@@ -132,8 +132,13 @@ class GameLauncher:
             self.playerCar.maxSpeed = PAR.Car_MaxSpeed
         # draw car on canvas
         self.playerCar.draw(self.gameCanvas)
+        
         # update camera position so it follows players car
         self.camera.update(self.playerCar.s_xy)
+        # update camera position so it follows the best car
+        self.cars.sort(key=lambda x: x.distanceTraveled, reverse=True)
+        self.camera.update(self.cars[0].s_xy)
+
         # scroll gamecanvas to apply camera offset
         self.gameCanvas.scroll(self.camera.getScreenOffsetX(), self.camera.getScreenOffsetY())
         # display gamecanvas on screen

@@ -37,7 +37,7 @@ def evolveGeneration(generation):
     # our parents will be the fist of the new generation
     nextGen = []
     for i in parentList:
-        newAICar = AICar(PAR.NN_NetSize)
+        newAICar = AICar(PAR.NN_NetSize, isParent = True)
         newAICar.net = i.net
         nextGen.append(newAICar)
     # print ("  kept " + str(len(nextGen)) + " entities as parents")

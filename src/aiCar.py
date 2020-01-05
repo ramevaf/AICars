@@ -12,21 +12,26 @@ from carEntity import CarEntity
 from neuronalNetwork import NeuronalNetwork
 from parameterHandler import ParameterHandler as PAR
 
-
 class AICar(CarEntity):
     '''
     a AIcar represents a AI controlled car in this game :)
     '''
     alive = True
     distanceTraveled = 0.0
+    isParent = False # AICar is a parent for others
 
-    def __init__(self, netSize):
+    def __init__(self, netSize, isParent = False):
         '''
         Constructor, initializes the neuronal network
 
         :param netSize: list of int defining the structure of the neuronal net
         '''
-        CarEntity.__init__(self)
+        if (isParent == True):
+            CarEntity.__init__(self, custSprite='sprites/Parentcar.png')
+        else:
+            CarEntity.__init__(self)
+
+        self.netSize = netSize
         self.net = NeuronalNetwork(netSize)
         self.distanceTraveled = 0
         
@@ -45,19 +50,22 @@ class AICar(CarEntity):
             x = np.array([])
             for DTCAngle in PAR.AICar_DTCAngles:
                 x = np.append(x, self.getDTC(self.phi_p+DTCAngle, circuitSprite))
+            
+            # add own speed to input
+            #x.append(self.v_p)
 
             # calculate feed forward path in the NN and return the output
             # since the network has two output neuron the return value consists
             # of only two values
             ffw = self.net.feedforward(x.reshape(-1,1))
             # which will be used as steering input of the vehilces
-            self.control(ffw[0], ffw[1])#, ffw[1])
+            self.control(ffw)#[0], ffw[1], ffw[2])
         else:
             self.stop()
         # count the traveled distance. Will be used as fitnes value    
         self.distanceTraveled += np.linalg.norm(self.delta_s)
             
-    def control(self, first, second = 0):
+    def control(self, netOutput):
         '''
         converts the output of the neuronal network to the driving comands
         of the cars
@@ -68,31 +76,24 @@ class AICar(CarEntity):
         :param first: fist input command
         :param second: second input command
         '''
-       
-        # Option 1: 
-#         if (first[0] > second[0]):
-#             if (first[0] > PAR.AICar_SteeringThreshold): #if input value crosses a threshold the car will steer
-#                 self.steerLeft()
-#         else:
-#             if (second[0] > PAR.AICar_SteeringThreshold):
-#                 self.steerRight()
-#         self.pushThrottle()
+        # convert into 1-dim array
+        [netOutput] = netOutput.reshape(1,self.netSize[-1])
 
-        # Option 2:
-        if (first[0] > second[0]):
-            if (first[0] > PAR.AICar_SteeringThreshold):
-                self.steerLeft(3000*(first[0]))
-        else:
-            if (second[0] > PAR.AICar_SteeringThreshold):
-                self.steerRight(3000*(second[0]))
-        self.pushThrottle()
-        
-        # Option 3:
-#         self.steerLeft(3000*(first[0]-0.5))
-#         if (second[0] > 0.1):
-#             self.pushThrottle()
+        if (PAR.AICar_Controlmode == 'Simple2DirSteer'):
+            # 2 Output neurons required: 
+            # : index 0 -> steer left
+            # : index 1 -> steer rigth
+            # : throttle always pressed, no brakes
+            action = self.getIndexOfMax(netOutput)
 
-        
+            if(action == 0):
+                self.steerLeft(3000*(netOutput[0]))
+            elif(action == 1):
+                self.steerRight(3000*(netOutput[1]))
+            self.pushThrottle()
+
+    def getIndexOfMax(self, values):
+        return np.argmax(values)
         
     def kill(self):
         '''

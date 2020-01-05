@@ -32,14 +32,15 @@ class ParameterHandler:
     
     AICar_DTCAngles = [-90,-45,0,45,90]
     AICar_SteeringThreshold = 0.1
+    AICar_Controlmode = 'Simple2DirSteer' # ['Simple2DirSteer']
     
     NN_NumGenerations = 100
     NN_NumPopulationPerGen = 20
-    NN_NetSize = [5,20,10,2]
     NN_mutationRate = 0.2
     NN_crossoverRate = 0.35
     NN_retainRateGood = 0.2
     NN_retainRateBad = 0.05
+    NN_NetSize = [5,20,10,2]
     
     
     
@@ -47,4 +48,7 @@ class ParameterHandler:
         '''
         Constructor
         '''
+        # Override contolmode specific parameters
+        if (self.AICar_Controlmode == 'Simple2DirSteer'):
+            self.NN_NetSize = [5,20,10,2]
         
