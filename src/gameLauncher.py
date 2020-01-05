@@ -134,7 +134,7 @@ class GameLauncher:
         self.playerCar.draw(self.gameCanvas)
         
         # update camera position so it follows players car
-        self.camera.update(self.playerCar.s_xy)
+        #self.camera.update(self.playerCar.s_xy)
         # update camera position so it follows the best car
         self.cars.sort(key=lambda x: x.distanceTraveled, reverse=True)
         self.camera.update(self.cars[0].s_xy)
