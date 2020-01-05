@@ -21,7 +21,7 @@ class ParameterHandler:
     GameCanvas_StartingAngle = 95.0 # starting angle of the cars
     
     # rar entity
-    Car_SteeringAccel =     1200  # degrees/s^2
+    Car_SteeringAccel =     3000  # degrees/s^2
     Car_MaxSteeringSpeed =  200   # degrees/s
     Car_ThrottleAccel =     200   # pixel/s^2
     Car_BrakeAccel =        -500  # pixel/s^2
@@ -32,7 +32,7 @@ class ParameterHandler:
     
     AICar_DTCAngles = [-90,-45,0,45,90]
     AICar_SteeringThreshold = 0.1
-    AICar_Controlmode = 'Simple2DirSteer' # ['Simple2DirSteer']
+    AICar_Controlmode = '5DirSteer' # ['Simple2DirSteer', 'Simple3DirSteer', '5DirSteer']
     
     NN_NumGenerations = 100
     NN_NumPopulationPerGen = 20
@@ -42,13 +42,16 @@ class ParameterHandler:
     NN_retainRateBad = 0.05
     NN_NetSize = [5,20,10,2]
     
+    # Override contolmode specific parameters
+    if (AICar_Controlmode == 'Simple3DirSteer'):
+        NN_NetSize = [5,20,10,3]
+    if (AICar_Controlmode == '5DirSteer'):
+        NN_NetSize = [6,30,20,5]
+        Car_MaxSpeed = 500
     
     
     def __init__(self):
         '''
         Constructor
         '''
-        # Override contolmode specific parameters
-        if (self.AICar_Controlmode == 'Simple2DirSteer'):
-            self.NN_NetSize = [5,20,10,2]
         

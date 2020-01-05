@@ -51,8 +51,9 @@ class AICar(CarEntity):
             for DTCAngle in PAR.AICar_DTCAngles:
                 x = np.append(x, self.getDTC(self.phi_p+DTCAngle, circuitSprite))
             
-            # add own speed to input
-            #x.append(self.v_p)
+            # add own speed to input if acceleration shall be taken into account
+            if (PAR.AICar_Controlmode == '5DirSteer'):
+                x = np.append(x, self.v_p)
 
             # calculate feed forward path in the NN and return the output
             # since the network has two output neuron the return value consists
@@ -87,10 +88,45 @@ class AICar(CarEntity):
             action = self.getIndexOfMax(netOutput)
 
             if(action == 0):
-                self.steerLeft(3000*(netOutput[0]))
+                self.steerLeft(PAR.Car_SteeringAccel*(netOutput[0]))
             elif(action == 1):
-                self.steerRight(3000*(netOutput[1]))
+                self.steerRight(PAR.Car_SteeringAccel*(netOutput[1]))
             self.pushThrottle()
+        if (PAR.AICar_Controlmode == 'Simple3DirSteer'):
+            # 3 Output neurons required: 
+            # : index 0 -> steer left
+            # : index 1 -> no steering
+            # : index 2 -> steer rigth
+            # : throttle always pressed, no brakes
+            action = self.getIndexOfMax(netOutput)
+
+            if(action == 0):
+                self.steerLeft(PAR.Car_SteeringAccel*(netOutput[0]))
+            if(action == 1):
+                self.stopSteering()
+            elif(action == 2):
+                self.steerRight(PAR.Car_SteeringAccel*(netOutput[2]))
+            self.pushThrottle()
+        if (PAR.AICar_Controlmode == '5DirSteer'):
+            # 3 Output neurons required: 
+            # : index 0 -> steer left
+            # : index 1 -> no steering
+            # : index 2 -> steer rigth
+            # : index 3 -> throttle
+            # : index 4 -> brake
+            steerAction = self.getIndexOfMax(netOutput[:3])
+            if(steerAction == 0):
+                self.steerLeft(PAR.Car_SteeringAccel*(netOutput[0]))
+            if(steerAction == 1):
+                self.stopSteering()
+            elif(steerAction == 2):
+                self.steerRight(PAR.Car_SteeringAccel*(netOutput[2]))
+            
+            accelAction = self.getIndexOfMax(netOutput[3:5])
+            if(accelAction == 0):
+                self.pushThrottle()
+            if(accelAction == 1):
+                self.pushBrake()
 
     def getIndexOfMax(self, values):
         return np.argmax(values)
