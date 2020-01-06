@@ -116,7 +116,6 @@ class CarEntity(Entity):
         steeringFac = np.clip(steeringFac, 0, 1)
         
         self.d_phi_p = self.d_phi_p*steeringFac 
-        Entity.move(self, dt)
         
         # stop braking at standstill
         if (self.v_p < 0):
@@ -124,6 +123,7 @@ class CarEntity(Entity):
             self.a_p = 0
             
         self.v_p = np.clip(self.v_p, 0, self.maxSpeed)
+        Entity.move(self, dt)
         
     def getDTC(self, phi_p, circuitSprite):
         '''
