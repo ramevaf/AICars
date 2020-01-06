@@ -61,14 +61,21 @@ class CarEntity(Entity):
         brakes the car
         '''
         self.isBraking = True
-        self.a_p = PAR.Car_BrakeAccel
+        if(self.v_p > 0):
+            self.a_p = PAR.Car_BrakeAccel
+        else:
+            self.a_p = 0
+
         
     def roll(self):
         '''
         let the car roll with drag only
         '''
         self.isBraking = False
-        self.a_p = PAR.Car_AirRestAccel
+        if(self.v_p > 0):
+            self.a_p = PAR.Car_AirRestAccel
+        else:
+            self.a_p = 0
         
     def stopSteering(self):
         '''
