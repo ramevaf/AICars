@@ -84,7 +84,7 @@ class GameLauncher:
                 anyoneAlive = []
                 for i in self.cars:
                     # car is alive if alive bit is set and is not standing
-                    if (i.alive and (i.v_p > 0.1)):
+                    if (i.isAlive and (i.v_p > 0.1)):
                         anyoneAlive.append(True)
                     else:
                         anyoneAlive.append(False)
@@ -114,7 +114,7 @@ class GameLauncher:
         self.circuitSprite.draw(self.gameCanvas, (PAR.GameCanvas_Width/2, PAR.GameCanvas_Height/2), 0)
         # calculate car instances
         for i in self.cars:
-            if (i.alive == True):
+            if (i.isAlive == True):
                 i.run(self.gameCanvas, self.circuitSprite)
                 i.move(dt)
                 i.draw(self.gameCanvas)
@@ -134,9 +134,14 @@ class GameLauncher:
         self.playerCar.draw(self.gameCanvas)
         
         if (PAR.Camera_Mode == 'FollowAI'):
-            # update camera position so it follows the best car
+            # sort cars by traveled distance
             self.cars.sort(key=lambda x: x.distanceTraveled, reverse=True)
-            self.camera.update(self.cars[0].s_xy)
+            # follow the first car which is alive
+            for i in self.cars:
+                if(i.isAlive == True):
+                # update camera position so it follows the best car
+                    self.camera.update(self.cars[0].s_xy)
+                    break
         else:
             # update camera position so it follows players car
             self.camera.update(self.playerCar.s_xy)

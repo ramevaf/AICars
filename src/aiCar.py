@@ -16,7 +16,7 @@ class AICar(CarEntity):
     '''
     a AIcar represents a AI controlled car in this game :)
     '''
-    alive = True
+    isAlive = True
     distanceTraveled = 0.0
     isParent = False # AICar is a parent for others
 
@@ -45,7 +45,7 @@ class AICar(CarEntity):
         :param gameCanvas: the GameCanvas object where the AICar is represented
         :param circuitSprite: the MySprite object defining the borders of the track
         '''
-        if (self.alive == True):
+        if (self.isAlive == True):
             # create a vector with all DTCs
             x = np.array([])
             for DTCAngle in PAR.AICar_DTCAngles:
@@ -135,10 +135,10 @@ class AICar(CarEntity):
         '''
         kills the entity
         '''
-        self.alive = False
+        self.isAlive = False
         self.stop()
         
     def __str__(self):
-        s = "\nAlive: " + str(self.alive)
+        s = "\nAlive: " + str(self.isAlive)
         s += "\ndistanceTraveled: " + str(self.distanceTraveled)
         return s

@@ -56,7 +56,7 @@ def evolveGeneration(generation):
     
     # make sure aive bits from parents are reset to True
     for i in nextGen:
-        i.alive = True 
+        i.isAlive = True 
         
     return nextGen
 
