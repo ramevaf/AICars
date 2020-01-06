@@ -133,11 +133,13 @@ class GameLauncher:
         # draw car on canvas
         self.playerCar.draw(self.gameCanvas)
         
-        # update camera position so it follows players car
-        #self.camera.update(self.playerCar.s_xy)
-        # update camera position so it follows the best car
-        self.cars.sort(key=lambda x: x.distanceTraveled, reverse=True)
-        self.camera.update(self.cars[0].s_xy)
+        if (PAR.Camera_Mode == 'FollowAI'):
+            # update camera position so it follows the best car
+            self.cars.sort(key=lambda x: x.distanceTraveled, reverse=True)
+            self.camera.update(self.cars[0].s_xy)
+        else:
+            # update camera position so it follows players car
+            self.camera.update(self.playerCar.s_xy)
 
         # scroll gamecanvas to apply camera offset
         self.gameCanvas.scroll(self.camera.getScreenOffsetX(), self.camera.getScreenOffsetY())

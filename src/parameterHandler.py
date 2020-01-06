@@ -9,9 +9,12 @@ class ParameterHandler:
     '''
     stores a lot of game specific parameters
     '''
-    # gameScree
+    # gameScreen
     GameScreen_Width = 800      # pixel
     GameScreen_Height  = 600    # pixel
+
+    # Camera
+    Camera_Mode = 'FollowAI' # ['FollowAI', 'FollowPlayer']
 
     # gamecanvas
     GameCanvas_Width = 2000      # pixel
@@ -35,7 +38,7 @@ class ParameterHandler:
     AICar_Controlmode = 'Simple3DirSteer' # ['Simple2DirSteer', 'Simple3DirSteer', '5DirSteer']
     
     NN_NumGenerations = 100
-    NN_NumPopulationPerGen = 20
+    NN_NumPopulationPerGen = 50
     NN_mutationRate = 0.2
     NN_crossoverRate = 0.35
     NN_retainRateGood = 0.2
