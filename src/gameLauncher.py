@@ -139,8 +139,8 @@ class GameLauncher:
             # follow the first car which is alive
             for i in self.cars:
                 if(i.isAlive == True):
-                # update camera position so it follows the best car
-                    self.camera.update(self.cars[0].s_xy)
+                    # update camera position so it follows the best car
+                    self.camera.update(i.s_xy)
                     break
         else:
             # update camera position so it follows players car
