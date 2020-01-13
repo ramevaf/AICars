@@ -15,13 +15,13 @@ class Entity:
     an Entity represents a movable or non movable 2D object
     '''
     # varables in x,y coordinates
-    a_xy = (0,0)     # pixels/s�
+    a_xy = (0,0)     # pixels/s^2
     v_xy = (0,0)     # pixels/s
     s_xy = (0,0)   # pixels
     # variables is polar coordinates
     d_phi_p = 0      # radial speed
     phi_p = 0        # degrees
-    a_p   = 0        # pixels/s�
+    a_p   = 0        # pixels/s^2
     v_p   = 0        # pixels/s
     
     isMovable = True # is entity movable?
@@ -50,7 +50,9 @@ class Entity:
             # update angle
             self.phi_p += self.d_phi_p*dt
             # update velocity in polar coorinates
-            self.v_p  += self.a_p*dt # v = v0 + a * dt     
+            self.v_p  += self.a_p*dt # v = v0 + a * dt
+            self.v_p = np.clip(self.v_p, 0, self.maxSpeed)
+
             # calculate xy component from polar velocity
             d_v_xy = (-np.sin(self.phi_p*np.pi/180)*self.v_p, -np.cos(self.phi_p*np.pi/180)*self.v_p)       
             
@@ -85,7 +87,7 @@ class Entity:
         '''
         sets the entities acceleration in polar coordinates
 
-        :param  a_p: acceleration in polar coordinates give in pixel/s²
+        :param  a_p: acceleration in polar coordinates give in pixel/s^2
         '''
         self.a_p = a_p
 
@@ -94,7 +96,7 @@ class Entity:
         sets the entities acceleration in xy coordinates
 
         :param  a_xy: acceleration give as numpy array in xy coordinates
-                      give in pixel/s²
+                      give in pixel/s^2
         '''
         self.a_xy = a_xy
 
