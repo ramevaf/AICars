@@ -33,12 +33,13 @@ class ParameterHandler:
     Car_OfftrackSpeed =     150   # pixel/s
     Car_DTCStepSize = 7
     
+    AICar_AliveMinSpeedThreshold = 5 # pixel/s
     AICar_DTCAngles = [-90,-45,0,45,90]
     AICar_SteeringThreshold = 0.1
     AICar_Controlmode = 'Simple3DirSteer' # ['Simple2DirSteer', 'Simple3DirSteer', '5DirSteer']
     
-    NN_NumGenerations = 100
-    NN_NumPopulationPerGen = 50
+    NN_NumGenerations = 99999
+    NN_NumPopulationPerGen = 30
     NN_mutationRate = 0.2
     NN_crossoverRate = 0.35
     NN_retainRateGood = 0.2
