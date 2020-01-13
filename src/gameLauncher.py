@@ -84,7 +84,7 @@ class GameLauncher:
                 anyoneAlive = []
                 for i in self.cars:
                     # car is alive if alive bit is set and is not standing
-                    if (i.isAlive and (i.v_p > 0.1)):
+                    if (i.isAlive and (i.v_p > 5)):
                         anyoneAlive.append(True)
                     else:
                         anyoneAlive.append(False)
@@ -105,7 +105,7 @@ class GameLauncher:
         calculates the objects of the game for one cycle and handles drawing on screen
         '''
         # get difference time in s
-        dt = self.clock.get_time()/1000
+        dt = self.clock.get_time()/1000.0
         # process user input
         self.runEventHandler()
         # fill canvas with racetrack color
