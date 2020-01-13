@@ -8,7 +8,7 @@ With each round a set of neuronal network driven cars is created which try to fo
 The player is able to controll the blue car but so far there is no game mechanic added.
 
 ## Installation
-Just clone the repository or download the *.zip file manually. The game itself is written in pyhon and is using the pygame engine which is kinda slow unfortunately. Make sure you have the pygame and numpy packages installed. Usually it should work to just run the following commands after you have installed python:
+Just clone the repository or download the *.zip file manually. The game itself is written in python and is using the pygame engine which is kinda slow unfortunately. Make sure you have the pygame and numpy packages installed. Usually it should work to run the following commands after you have installed python:
 ```
 pip install numpy
 pip install pygame
