@@ -27,7 +27,7 @@ class AICar(CarEntity):
         :param netSize: list of int defining the structure of the neuronal net
         '''
         if (isParent == True):
-            CarEntity.__init__(self, custSprite='sprites/Parentcar.png')
+            CarEntity.__init__(self, custSprite=PAR.Path_ParentCarSprite)
         else:
             CarEntity.__init__(self)
 

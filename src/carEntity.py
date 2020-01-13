@@ -19,7 +19,7 @@ class CarEntity(Entity):
     steeringAccel = 0
     maxSpeed = PAR.Car_MaxSpeed
 
-    def __init__(self, custSprite = 'sprites/car.png', isMovable = True):
+    def __init__(self, custSprite = PAR.Path_CarSprite, isMovable = True):
         '''
         Constructor
 

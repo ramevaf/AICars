@@ -5,10 +5,19 @@ Created on 21.05.2019
 
 @author: D.Ramonat
 '''
+import os
+dirname = os.path.dirname(__file__)
+
 class ParameterHandler:
     '''
     stores a lot of game specific parameters
     '''
+    # paths
+    Path_CircuitSprite = os.path.join(dirname, '..\sprites\Circuit.png')
+    Path_PlayerCarSprite = os.path.join(dirname, '..\sprites\PlayerCar.png')
+    Path_ParentCarSprite = os.path.join(dirname, '..\sprites\Parentcar.png')
+    Path_CarSprite = os.path.join(dirname, '..\sprites\Car.png')
+
     # gameScreen
     GameScreen_Width = 800      # pixel
     GameScreen_Height  = 600    # pixel

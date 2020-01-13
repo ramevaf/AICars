@@ -28,7 +28,7 @@ class GameLauncher:
     # setup clock
     clock = pygame.time.Clock()
 
-    circuitSprite = MySprite('sprites/Circuit.png')
+    circuitSprite = MySprite(PAR.Path_CircuitSprite)
     
     leftPressed = False
     rightPressed = False
@@ -52,7 +52,7 @@ class GameLauncher:
         # init game camera
         self.camera = Camera([PAR.GameCanvas_Width, PAR.GameCanvas_Height], [PAR.GameScreen_Width, PAR.GameScreen_Height])
         # init players car
-        self.playerCar = CarEntity('Sprites/PlayerCar.png')
+        self.playerCar = CarEntity(PAR.Path_PlayerCarSprite)
         # fill canvas with solid white
         self.gameCanvas.fill(PAR.GameCanvas_Background)
 
