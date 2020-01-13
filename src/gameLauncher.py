@@ -106,6 +106,7 @@ class GameLauncher:
         '''
         # get difference time in s
         dt = self.clock.get_time()/1000.0
+
         # process user input
         self.runEventHandler()
         # fill canvas with racetrack color
@@ -113,23 +114,25 @@ class GameLauncher:
         # draw circuit on canvas
         self.circuitSprite.draw(self.gameCanvas, (PAR.GameCanvas_Width/2, PAR.GameCanvas_Height/2), 0)
         # calculate car instances
-        for i in self.cars:
-            if (i.isAlive == True):
-                i.run(self.gameCanvas, self.circuitSprite)
-                i.move(dt)
-                i.draw(self.gameCanvas)
+        if(dt > 0.0):
+            for i in self.cars:
+                if (i.isAlive == True):
+                    i.run(self.gameCanvas, self.circuitSprite)
+                    i.move(dt)
+                    i.draw(self.gameCanvas)
 
-                if (pygame.sprite.collide_mask(i.getSprite(), self.circuitSprite)):
-                    i.kill()
+                    if (pygame.sprite.collide_mask(i.getSprite(), self.circuitSprite)):
+                        i.kill()
+            # slow down player car if off track
+            if (pygame.sprite.collide_mask(self.playerCar.getSprite(), self.circuitSprite)):
+                self.playerCar.maxSpeed = PAR.Car_OfftrackSpeed
+            else:
+                self.playerCar.maxSpeed = PAR.Car_MaxSpeed
+            # calculate new position of players car entity
+            self.playerCar.move(dt)
+        
         # limit framerate to ~30 fps
         self.clock.tick(30)
-        # calculate new position of players car entity
-        self.playerCar.move(dt)
-        # slow down player car if off track
-        if (pygame.sprite.collide_mask(self.playerCar.getSprite(), self.circuitSprite)):
-            self.playerCar.maxSpeed = PAR.Car_OfftrackSpeed
-        else:
-            self.playerCar.maxSpeed = PAR.Car_MaxSpeed
         # draw car on canvas
         self.playerCar.draw(self.gameCanvas)
         
