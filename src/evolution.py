@@ -46,8 +46,8 @@ def evolveGeneration(generation):
     # breed new childs as long as current population is less than the population size
     while len(nextGen) < PAR.NN_NumPopulationPerGen:
         # select father and mother
-        father = random.choice(nextGen)
-        mother = random.choice(nextGen)
+        father = random.choice(parentList)
+        mother = random.choice(parentList)
         # no inbreeding
         if father != mother:
             child = crossover(father, mother)

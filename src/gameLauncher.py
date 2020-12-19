@@ -63,44 +63,68 @@ class GameLauncher:
         '''
         creates generations of neuronal network drven cars until NN_NumGenerations is 
         reached. For each generation runGame is called as long as one AICar is alive
-        '''        
-        self.cars = [AICar(PAR.NN_NetSize) for i in range(PAR.NN_NumPopulationPerGen)]
+        ''' 
+        # first generation of AIcars
+        AIcarGen = [AICar(PAR.NN_NetSize) for i in range(PAR.NN_NumPopulationPerGen)]
+        
+        for numGeneration in range(PAR.NN_NumGenerations):
+            self.numGen = numGeneration
+            
+            print("starting generation " + str(numGeneration))
+            
+            # for i in AIcarGen:
+            #     print("ID: " + str(id(i)))
+            
+            
+            AIcarBatches = self.splitListIntoBatch(AIcarGen, PAR.NN_MaxBatchSize)
+            AIcarGen = []
+            for idx, batch in enumerate(AIcarBatches):
+                print("batch no: " + str(idx))
+                self.simulateBatch(batch)
+                AIcarGen = AIcarGen + batch
+            # for i in AIcarGen:
+            #     print("dist: " + str(i.distanceTraveled))
 
-        #input("Press Enter to continue...")
-             
-        for generation in range(PAR.NN_NumGenerations):
-            self.numGen = generation
-            
-            print("starting generation " + str(generation))
-            
-            # create a new generation            
-            # initialize list to indicate generation is alive
-            anyoneAlive = [True]
-            
-            while (any(item == True for item in anyoneAlive)):
-                # as long as anyone is alive run game loop
-                self.runGame()
-                # update list of alive flags
-                anyoneAlive = []
-                for i in self.cars:
-                    # car is alive if alive bit is set and is not standing
-                    if (i.isAlive and (i.v_p > PAR.AICar_AliveMinSpeedThreshold)):
-                        anyoneAlive.append(True)
-                    else:
-                        anyoneAlive.append(False)
-                    
-                if (self.nextgen == True):
-                    anyoneAlive = [False]
-                
             # print("all of entities dead! evolving...")
-            
-            self.cars = evolution.evolveGeneration(self.cars)                    
+            AIcarGen = evolution.evolveGeneration(AIcarGen)
             self.nextgen == False
             
         print("final generation reached. End of Game")
             
+    def splitListIntoBatch(self, flist, batchSize):
+        '''
+        splits a list (of AIcars) into several smaller lists (=batches)
+        '''
+        arrs = []
+        while len(flist) > batchSize:
+            batch = flist[:batchSize]
+            arrs.append(batch)
+            flist = flist[batchSize:]
+        arrs.append(flist)
+        return arrs
 
-    def runGame(self):
+    def simulateBatch(self, AIcarsBatch):
+        '''
+        simulates a batch of AIcars until all cars have died
+        '''
+        aliveStsList = [True]
+        
+        while (any(item == True for item in aliveStsList)):
+            # as long as anyone is alive run game loop
+            self.runGame(AIcarsBatch)
+            # update list of alive flags
+            aliveStsList = []
+            for i in AIcarsBatch:
+                # car is alive if alive bit is set and is not standing
+                if (i.isAlive and (i.v_p > PAR.AICar_AliveMinSpeedThreshold)):
+                    aliveStsList.append(True)
+                else:
+                    aliveStsList.append(False)
+                
+            if (self.nextgen == True):
+                aliveStsList = [False]
+
+    def runGame(self, AIcarsList):
         ''' 
         calculates the objects of the game for one cycle and handles drawing on screen
         '''
@@ -115,7 +139,7 @@ class GameLauncher:
         self.circuitSprite.draw(self.gameCanvas, (PAR.GameCanvas_Width/2, PAR.GameCanvas_Height/2), 0)
         # calculate car instances
         if(dt > 0.0):
-            for i in self.cars:
+            for i in AIcarsList:
                 if (i.isAlive == True):
                     i.run(self.gameCanvas, self.circuitSprite)
                     i.move(dt)
@@ -138,9 +162,9 @@ class GameLauncher:
         
         if (PAR.Camera_Mode == 'FollowAI'):
             # sort cars by traveled distance
-            self.cars.sort(key=lambda x: x.distanceTraveled, reverse=True)
+            AIcarsList.sort(key=lambda x: x.distanceTraveled, reverse=True)
             # follow the first car which is alive
-            for i in self.cars:
+            for i in AIcarsList:
                 if(i.isAlive == True):
                     # update camera position so it follows the best car
                     self.camera.update(i.s_xy)

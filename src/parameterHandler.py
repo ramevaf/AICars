@@ -48,18 +48,19 @@ class ParameterHandler:
     AICar_Controlmode = 'Simple3DirSteer' # ['Simple2DirSteer', 'Simple3DirSteer', '5DirSteer']
     
     NN_NumGenerations = 99999
-    NN_NumPopulationPerGen = 30
-    NN_mutationRate = 0.2
-    NN_crossoverRate = 0.35
+    NN_NumPopulationPerGen = 150
+    NN_MaxBatchSize = 25
+    NN_mutationRate = 0.25
+    NN_crossoverRate = 0.45
     NN_retainRateGood = 0.2
-    NN_retainRateBad = 0.05
-    NN_NetSize = [5,20,10,2]
+    NN_retainRateBad = 0.1
+    NN_NetSize = [5,4,3,2]
     
     # Override contolmode specific parameters
     if (AICar_Controlmode == 'Simple3DirSteer'):
-        NN_NetSize = [5,20,10,3]
+        NN_NetSize = [5,4,3]
     if (AICar_Controlmode == '5DirSteer'):
-        NN_NetSize = [6,30,20,5]
+        NN_NetSize = [6,8,5,5]
         Car_MaxSpeed = 500
     
     
