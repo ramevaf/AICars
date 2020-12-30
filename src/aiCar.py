@@ -19,6 +19,8 @@ class AICar(CarEntity):
     isAlive = True
     distanceTraveled = 0.0
     isParent = False # AICar is a parent for others
+    fitness = 0
+    lastDTCs = [0,0,0,0,0]
 
     def __init__(self, netSize, isParent = False):
         '''
@@ -46,13 +48,21 @@ class AICar(CarEntity):
         :param circuitSprite: the MySprite object defining the borders of the track
         '''
         if (self.isAlive == True):
-            # create a vector with all DTCs
+            # create input vector with all DTCs
             x = np.array([])
             for DTCAngle in PAR.AICar_DTCAngles:
                 x = np.append(x, self.getDTC(self.phi_p+DTCAngle, circuitSprite))
             
+            dTCdiff = self.lastDTCs - x
+            
             # add own speed to input if acceleration shall be taken into account
             if (PAR.AICar_Controlmode == '5DirSteer'):
+         
+                x = np.append(x, dTCdiff)
+                x = np.append(x, self.v_p)
+                x = np.append(x, self.a_p)
+                x = np.append(x, self.d_phi_p)
+            if (PAR.AICar_Controlmode == '4DirSteer'):
                 x = np.append(x, self.v_p)
 
             # calculate feed forward path in the NN and return the output
@@ -65,6 +75,9 @@ class AICar(CarEntity):
             self.stop()
         # count the traveled distance. Will be used as fitnes value    
         self.distanceTraveled += np.linalg.norm(self.delta_s)
+        # fitness = ds^2 + v_p
+        self.fitness += np.linalg.norm(self.delta_s*self.delta_s)# + self.v_p/PAR.Game_MaxFramerate)
+        # self.fitness += np.linalg.norm(self.delta_s*self.delta_s)
             
     def control(self, netOutput):
         '''
@@ -113,7 +126,30 @@ class AICar(CarEntity):
             # : index 1 -> no steering
             # : index 2 -> steer rigth
             # : index 3 -> throttle
-            # : index 4 -> brake
+            # : index 4 -> roll
+            # : index 5 -> brake
+            steerAction = self.getIndexOfMax(netOutput[:3])
+            if(steerAction == 0):
+                self.steerLeft(netOutput[0])
+            if(steerAction == 1):
+                self.stopSteering()
+            elif(steerAction == 2):
+                self.steerRight(netOutput[2])
+            
+            accelAction = self.getIndexOfMax(netOutput[3:6])
+            if(accelAction == 0):
+                self.pushThrottle(netOutput[3])
+            if(accelAction == 1):
+                self.roll()
+            if(accelAction == 2):
+                self.pushBrake(netOutput[5])
+            # self.pushThrottle()
+        if (PAR.AICar_Controlmode == '4DirSteer'):
+            # 3 Output neurons required: 
+            # : index 0 -> steer left
+            # : index 1 -> no steering
+            # : index 2 -> steer rigth
+            # : index 3 -> brake
             steerAction = self.getIndexOfMax(netOutput[:3])
             if(steerAction == 0):
                 self.steerLeft(PAR.Car_SteeringAccel*(netOutput[0]))
@@ -122,9 +158,9 @@ class AICar(CarEntity):
             elif(steerAction == 2):
                 self.steerRight(PAR.Car_SteeringAccel*(netOutput[2]))
             
-            accelAction = self.getIndexOfMax(netOutput[3:5])
-            if(accelAction == 0):
-                self.pushThrottle()
+            self.pushThrottle()
+
+            accelAction = netOutput[3]>0.5
             if(accelAction == 1):
                 self.pushBrake()
 
@@ -137,7 +173,11 @@ class AICar(CarEntity):
         '''
         self.isAlive = False
         self.stop()
-        
+
+    def penalizeFitness(self):
+        # penalize if the car crashes with full speed without braking, reward if it tried to brake
+        self.fitness -= self.a_p
+
     def __str__(self):
         s = "\nAlive: " + str(self.isAlive)
         s += "\ndistanceTraveled: " + str(self.distanceTraveled)

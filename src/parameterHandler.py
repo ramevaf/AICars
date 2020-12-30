@@ -25,18 +25,23 @@ class ParameterHandler:
     # Camera
     Camera_Mode = 'FollowAI' # ['FollowAI', 'FollowPlayer']
 
+    # Game Overall
+    Game_MaxFramerate = 15
+
     # gamecanvas
     GameCanvas_Width = 2000      # pixel
     GameCanvas_Height  = 1500    # pixel
     GameCanvas_Background = (200, 200, 200) #color value of the track
     GameCanvas_StartingPoint = [1650.0,1350.0] #starting position of the cars
-    GameCanvas_StartingAngle = 95.0 # starting angle of the cars
+    # GameCanvas_StartingPoint = [1040.0,115.0] #starting position of the cars
+    GameCanvas_StartingAngle = 95.0 # starting angle of the cars clockwise
+    # GameCanvas_StartingAngle = 275.0 # starting angle of the cars counterclockwise
     
-    # rar entity
+    # Car entity
     Car_SteeringAccel =     3000  # degrees/s^2
     Car_MaxSteeringSpeed =  200   # degrees/s
     Car_ThrottleAccel =     200   # pixel/s^2
-    Car_BrakeAccel =        -500  # pixel/s^2
+    Car_BrakeAccel =        -200  # pixel/s^2
     Car_AirRestAccel =      -50   # pixel/s^2
     Car_MaxSpeed =          250   # pixel/s
     Car_OfftrackSpeed =     150   # pixel/s
@@ -45,22 +50,27 @@ class ParameterHandler:
     AICar_AliveMinSpeedThreshold = 5 # pixel/s
     AICar_DTCAngles = [-90,-45,0,45,90]
     AICar_SteeringThreshold = 0.1
-    AICar_Controlmode = 'Simple3DirSteer' # ['Simple2DirSteer', 'Simple3DirSteer', '5DirSteer']
+    AICar_Controlmode = '5DirSteer' # ['Simple2DirSteer', 'Simple3DirSteer', '4DirSteer', '5DirSteer']
     
     NN_NumGenerations = 99999
-    NN_NumPopulationPerGen = 150
-    NN_MaxBatchSize = 25
-    NN_mutationRate = 0.25
-    NN_crossoverRate = 0.45
-    NN_retainRateGood = 0.2
-    NN_retainRateBad = 0.1
-    NN_NetSize = [5,4,3,2]
+    NN_NumPopulationPerGen = 300
+    NN_MaxBatchSize = 100
+    NN_mutationRate = 0.15
+    NN_crossoverRate = 0.4
+    NN_retainRateGood = 0.05
+    NN_retainRateBad = 0.01
+    NN_NetSize = [0]
     
     # Override contolmode specific parameters
+    if (AICar_Controlmode == 'Simple2DirSteer'):
+        NN_NetSize = [5,4,2]
     if (AICar_Controlmode == 'Simple3DirSteer'):
         NN_NetSize = [5,4,3]
     if (AICar_Controlmode == '5DirSteer'):
-        NN_NetSize = [6,8,5,5]
+        NN_NetSize = [13,30,10,6]
+        Car_MaxSpeed = 500
+    if (AICar_Controlmode == '4DirSteer'):
+        NN_NetSize = [6,10,4]
         Car_MaxSpeed = 500
     
     

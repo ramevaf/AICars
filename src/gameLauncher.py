@@ -48,7 +48,6 @@ class GameLauncher:
         pygame.display.set_caption('AICars')
          # init pygame.font used for displaying text onto the gamescreen
         pygame.font.init()
-        self.myfont = pygame.font.SysFont('Arial', 18)
         # init game camera
         self.camera = Camera([PAR.GameCanvas_Width, PAR.GameCanvas_Height], [PAR.GameScreen_Width, PAR.GameScreen_Height])
         # init players car
@@ -67,10 +66,10 @@ class GameLauncher:
         # first generation of AIcars
         AIcarGen = [AICar(PAR.NN_NetSize) for i in range(PAR.NN_NumPopulationPerGen)]
         
-        for numGeneration in range(PAR.NN_NumGenerations):
-            self.numGen = numGeneration
+        for genIdx in range(PAR.NN_NumGenerations):
+            self.genIdx = genIdx
             
-            print("starting generation " + str(numGeneration))
+            print("starting generation " + str(genIdx))
             
             # for i in AIcarGen:
             #     print("ID: " + str(id(i)))
@@ -78,14 +77,15 @@ class GameLauncher:
             
             AIcarBatches = self.splitListIntoBatch(AIcarGen, PAR.NN_MaxBatchSize)
             AIcarGen = []
-            for idx, batch in enumerate(AIcarBatches):
-                print("batch no: " + str(idx))
+            for batchIdx, batch in enumerate(AIcarBatches):
+                self.batchIdx = batchIdx
+                print("batch no: " + str(batchIdx))
                 self.simulateBatch(batch)
                 AIcarGen = AIcarGen + batch
             # for i in AIcarGen:
             #     print("dist: " + str(i.distanceTraveled))
 
-            # print("all of entities dead! evolving...")
+            print("all of entities dead! evolving...")
             AIcarGen = evolution.evolveGeneration(AIcarGen)
             self.nextgen == False
             
@@ -140,13 +140,17 @@ class GameLauncher:
         # calculate car instances
         if(dt > 0.0):
             for i in AIcarsList:
+                i.draw(self.gameCanvas)
                 if (i.isAlive == True):
                     i.run(self.gameCanvas, self.circuitSprite)
-                    i.move(dt)
-                    i.draw(self.gameCanvas)
+                    # run simulation with a fixed speed because using a dynamic one (dt) messes up the simulation at every lag on my slow pc 
+                    i.move(1.0/PAR.Game_MaxFramerate) 
+                    
 
                     if (pygame.sprite.collide_mask(i.getSprite(), self.circuitSprite)):
+                        # i.penalizeFitness()
                         i.kill()
+                
             # slow down player car if off track
             if (pygame.sprite.collide_mask(self.playerCar.getSprite(), self.circuitSprite)):
                 self.playerCar.maxSpeed = PAR.Car_OfftrackSpeed
@@ -155,14 +159,15 @@ class GameLauncher:
             # calculate new position of players car entity
             self.playerCar.move(dt)
         
-        # limit framerate to ~30 fps
-        self.clock.tick(30)
+        # limit framerate
+        # self.clock.tick(PAR.Game_MaxFramerate)
+        self.clock.tick()
         # draw car on canvas
         self.playerCar.draw(self.gameCanvas)
         
         if (PAR.Camera_Mode == 'FollowAI'):
             # sort cars by traveled distance
-            AIcarsList.sort(key=lambda x: x.distanceTraveled, reverse=True)
+            AIcarsList.sort(key=lambda x: x.fitness, reverse=True)
             # follow the first car which is alive
             for i in AIcarsList:
                 if(i.isAlive == True):
@@ -177,12 +182,28 @@ class GameLauncher:
         self.gameCanvas.scroll(self.camera.getScreenOffsetX(), self.camera.getScreenOffsetY())
         # display gamecanvas on screen
         self.screen.blit(self.gameCanvas, (0,0))
-        # create textSurface for displaying frame rate
-        textSurface = self.myfont.render(str(self.getFrameRate()), False, (0, 0, 0))
-        self.screen.blit(textSurface,(10,10))
+        self.drawInfoBox()
 
         # update canvas and show on screen
         pygame.display.update()
+
+    def drawInfoBox(self):
+        # create textSurface for displaying some addtional information
+        self.myfont = pygame.font.SysFont('Verdana', 10)
+        color = (255, 255, 255)
+
+        string = "Framerate:       " + str(self.getFrameRate())
+        textSurface = self.myfont.render(string, False, color)
+        self.screen.blit(textSurface,(10,10))
+        
+        string = "Generation No: " + str(self.genIdx)
+        textSurface = self.myfont.render(string, False, color)
+        self.screen.blit(textSurface,(10,20))
+        
+        string = "Batch No:         " + str(self.batchIdx+1) + "/" + str(int(np.ceil(PAR.NN_NumPopulationPerGen/PAR.NN_MaxBatchSize)))
+        textSurface = self.myfont.render(string, False, color)
+        self.screen.blit(textSurface,(10,30))
+
         
     def runEventHandler(self):
         ''' 

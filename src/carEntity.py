@@ -31,38 +31,38 @@ class CarEntity(Entity):
         sprite = MySprite(custSprite)
         Entity.__init__(self, sprite, self.s_xy, isMovable = True)
         
-    def steerLeft(self, steeraccel = PAR.Car_SteeringAccel):
+    def steerLeft(self, fac = 1.0):
         '''
         makes the car steer left
 
         :param steeraccel: steering acclereration given in degrees/s^2
         '''
-        self.steeringAccel = steeraccel
+        self.steeringAccel = PAR.Car_SteeringAccel*fac
         self.isSteering = True      
         
-    def steerRight(self, steeraccel = PAR.Car_SteeringAccel):
+    def steerRight(self, fac = 1.0):
         '''
         makes the car steer right
 
         :param steeraccel: steering acclereration given in degrees/s^2
         '''
-        self.steeringAccel = -steeraccel     
+        self.steeringAccel = -PAR.Car_SteeringAccel*fac 
         self.isSteering = True      
 
-    def pushThrottle(self):
+    def pushThrottle(self, fac = 1.0):
         '''
         makes the car accelerate
         '''
         self.isBraking = False
-        self.a_p = PAR.Car_ThrottleAccel
+        self.a_p = PAR.Car_ThrottleAccel*fac
     
-    def pushBrake(self):
+    def pushBrake(self, fac = 1.0):
         '''
         brakes the car
         '''
         self.isBraking = True
         if(self.v_p > 0):
-            self.a_p = PAR.Car_BrakeAccel
+            self.a_p = PAR.Car_BrakeAccel*fac
         else:
             self.a_p = 0
 
